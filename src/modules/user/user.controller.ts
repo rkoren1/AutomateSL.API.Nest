@@ -1,7 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthenticateUserDto } from './dto/authenticate-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { AuthenticateUserRes } from './responses/authenticate-user.response';
 import { UserService } from './user.service';
 
 @ApiTags('User')
@@ -15,6 +16,9 @@ export class UserController {
   }
 
   @Post('authenticate')
+  @ApiOkResponse({
+    type: AuthenticateUserRes,
+  })
   authenticate(@Body() authenticateUserDto: AuthenticateUserDto) {
     return this.userService.authenticate(authenticateUserDto);
   }
