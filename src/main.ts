@@ -5,6 +5,14 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('/api');
+  app.enableCors({
+    origin: [
+      'http://localhost:4200',
+      'https://www.automatesl.com',
+      'https://automatesl.com',
+    ],
+    optionsSuccessStatus: 200,
+  });
   const config = new DocumentBuilder()
     .setTitle('Automate SL API')
     .setDescription('Automate SL API')
