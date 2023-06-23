@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import { AuthenticateUserDto } from './dto/authenticate-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
-import { AuthenticateUserRes } from './responses/authenticate-user.response';
+import { AuthenticateUserRes } from './dto/authenticate-user-response.dto';
 
 @Injectable()
 export class UserService {
