@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class AuthenticateUserRes {
   @ApiProperty()
-  readonly authenticated: boolean;
+  readonly authenticated?: boolean;
   @ApiProperty()
   readonly message?: string;
   @ApiProperty()

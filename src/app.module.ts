@@ -5,9 +5,10 @@ import { DatabaseModule } from './core/database/database.module';
 import { JwtMiddleware } from './core/guards/jwt/jwt.middleware';
 import { BotModule } from './modules/bot/bot.module';
 import { UserModule } from './modules/user/user.module';
+import { TerminalModule } from './modules/terminal/terminal.module';
 
 @Module({
-  imports: [DatabaseModule, DatabaseModule, BotModule, UserModule],
+  imports: [DatabaseModule, DatabaseModule, BotModule, UserModule, TerminalModule],
   controllers: [AppController],
   providers: [AppService],
 })

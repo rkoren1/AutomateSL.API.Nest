@@ -4,6 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import { AuthenticateUserDto } from './dto/authenticate-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
+import { AuthenticateUserRes } from './responses/authenticate-user.response';
 
 @Injectable()
 export class UserService {
@@ -32,13 +33,13 @@ export class UserService {
       });
   }
   authenticate(authenticateUserDto: AuthenticateUserDto) {
-    User.findOne({
+    return User.findOne({
       attributes: ['id', 'email', 'password'],
       where: { email: authenticateUserDto.email },
     })
       .then((user) => {
         if (!user) return { message: 'invalid credentials' };
-        bcrypt
+        return bcrypt
           .compare(authenticateUserDto.password, user.password)
           .then((result) => {
             if (result === true) {
@@ -53,15 +54,17 @@ export class UserService {
                 { expiresIn: '1d' },
               );
               //save refreshToken in db
-              User.update(
+              return User.update(
                 { refreshToken: refreshToken },
                 { where: { email: authenticateUserDto.email } },
               )
-                .then((updateResult) => ({
-                  authenticated: true,
-                  accessToken: accessToken,
-                  refreshToken: refreshToken,
-                }))
+                .then((updateResult) => {
+                  return {
+                    authenticated: true,
+                    accessToken: accessToken,
+                    refreshToken: refreshToken,
+                  } as AuthenticateUserRes;
+                })
                 .catch((err) => {
                   console.error(err);
                   return { authenticated: false, message: 'error occured' };

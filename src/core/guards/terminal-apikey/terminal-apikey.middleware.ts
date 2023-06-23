@@ -1,4 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Terminal } from 'src/modules/terminal/entities/terminal.entity';
 
 @Injectable()
 export class TerminalApikeyMiddleware implements NestMiddleware {
