@@ -6,9 +6,21 @@ import { JwtMiddleware } from './core/guards/jwt/jwt.middleware';
 import { BotModule } from './modules/bot/bot.module';
 import { UserModule } from './modules/user/user.module';
 import { TerminalModule } from './modules/terminal/terminal.module';
+import { SharedBotModule } from './modules/shared-bot/shared-bot.module';
+import { SharedBotUserSubscriptionModule } from './modules/shared-bot-user-subscription/shared-bot-user-subscription.module';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
 
 @Module({
-  imports: [DatabaseModule, DatabaseModule, BotModule, UserModule, TerminalModule],
+  imports: [
+    DatabaseModule,
+    DatabaseModule,
+    BotModule,
+    UserModule,
+    TerminalModule,
+    SharedBotModule,
+    SubscriptionModule,
+    SharedBotUserSubscriptionModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

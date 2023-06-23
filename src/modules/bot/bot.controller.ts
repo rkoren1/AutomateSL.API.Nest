@@ -1,16 +1,8 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-} from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BotService } from './bot.service';
 import { CreateBotDto } from './dto/create-bot.dto';
-import { UpdateBotDto } from './dto/update-bot.dto';
+import { GetBotDto } from './dto/get-bot.dto';
 
 @ApiTags('Bot')
 @Controller('bot')
@@ -22,23 +14,12 @@ export class BotController {
     return this.botService.create(createBotDto);
   }
 
-  @Get()
-  findAll() {
-    return this.botService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.botService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBotDto: UpdateBotDto) {
-    return this.botService.update(+id, updateBotDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.botService.remove(+id);
+  @Get('getbots')
+  @ApiOkResponse({
+    type: GetBotDto,
+  })
+  getAllBots(@Req() req) {
+    const userId = req.id;
+    return this.botService.getAllBots(userId).then((res) => res);
   }
 }

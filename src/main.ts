@@ -12,6 +12,7 @@ async function bootstrap() {
       'https://automatesl.com',
     ],
     optionsSuccessStatus: 200,
+    credentials: true,
   });
   const config = new DocumentBuilder()
     .setTitle('Automate SL API')
