@@ -4,6 +4,12 @@ import { Column, DataType, Model, Table } from 'sequelize-typescript';
 @Table({ underscored: true, tableName: 'bot' })
 export class Bot extends Model<Bot> {
   @Column({
+    type: DataType.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  })
+  id: number;
+  @Column({
     type: DataType.STRING,
     allowNull: false,
   })
