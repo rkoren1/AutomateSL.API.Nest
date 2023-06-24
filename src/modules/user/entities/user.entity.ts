@@ -1,11 +1,6 @@
-import {
-  Column,
-  DataType,
-  Model,
-  PrimaryKey,
-  Table,
-} from 'sequelize-typescript';
-
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Bot } from 'src/modules/bot/entities/bot.entity';
+import { SharedBotUserSubscription } from 'src/modules/shared-bot-user-subscription/entities/shared-bot-user-subscription.entity';
 @Table({ underscored: true, tableName: 'user' })
 export class User extends Model<User> {
   @Column({
@@ -41,4 +36,10 @@ export class User extends Model<User> {
     type: DataType.STRING,
   })
   avatarName: string;
+
+  @HasMany(() => Bot, 'userId')
+  bot: Bot[];
+
+  @HasMany(() => SharedBotUserSubscription, 'userId')
+  sharedBotUserSubscription: SharedBotUserSubscription[];
 }

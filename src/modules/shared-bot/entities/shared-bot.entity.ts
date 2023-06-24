@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { SharedBotUserSubscription } from 'src/modules/shared-bot-user-subscription/entities/shared-bot-user-subscription.entity';
 
 @Table({ underscored: true, tableName: 'shared_bot' })
 export class SharedBot extends Model<SharedBot> {
@@ -52,4 +53,7 @@ export class SharedBot extends Model<SharedBot> {
     allowNull: false,
   })
   imageId: string;
+
+  @HasMany(() => SharedBotUserSubscription, 'sharedBotId')
+  sharedBotUserSubscription: SharedBotUserSubscription;
 }

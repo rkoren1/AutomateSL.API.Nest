@@ -1,4 +1,11 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { Bot } from 'src/modules/bot/entities/bot.entity';
 
 @Table({ underscored: true, tableName: 'subscription' })
 export class Subscription extends Model<Subscription> {
@@ -28,4 +35,7 @@ export class Subscription extends Model<Subscription> {
     allowNull: false,
   })
   botId: number;
+
+  @BelongsTo(() => Bot, 'botId')
+  bot: Bot;
 }
