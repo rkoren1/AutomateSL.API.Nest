@@ -9,5 +9,5 @@ export class AuthenticateUserDto {
   readonly password: string;
 
   @IsNotEmpty()
-  readonly remmemberMe: boolean;
+  readonly rememberMe: boolean;
 }

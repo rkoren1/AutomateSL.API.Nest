@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthenticateUserDto } from './dto/authenticate-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,7 +19,37 @@ export class UserController {
   @ApiOkResponse({
     type: AuthenticateUserRes,
   })
-  authenticate(@Body() authenticateUserDto: AuthenticateUserDto) {
-    return this.userService.authenticate(authenticateUserDto);
+  authenticate(@Body() authenticateUserDto: AuthenticateUserDto, @Res() res) {
+    return this.userService
+      .authenticate(authenticateUserDto)
+      .then((result) => {
+        if (result.refresh_token) {
+          if (authenticateUserDto.rememberMe) {
+            res.cookie('jwt', result.refresh_token, {
+              httpOnly: true,
+              maxAge: 7889400000,
+            }); // maxAge = 3 months in ms
+          } else {
+            res.cookie('jwt', result.refresh_token, {
+              httpOnly: true,
+              maxAge: 86400000,
+            }); // maxAge = 1day in ms
+          }
+        }
+        return res.status(200).json({
+          email: authenticateUserDto.email,
+          authenticated: result.authenticated,
+          access_token: result.access_token,
+          message: 'Logged in Successfuly',
+        });
+      })
+      .catch((err) => {
+        return res.status(400).send({
+          authenticated: false,
+          access_token: null,
+          email: null,
+          message: 'Invalid Credentials',
+        });
+      });
   }
 }

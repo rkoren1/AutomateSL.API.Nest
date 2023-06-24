@@ -32,55 +32,51 @@ export class UserService {
         }
       });
   }
-  authenticate(authenticateUserDto: AuthenticateUserDto) {
-    return User.findOne({
-      attributes: ['id', 'email', 'password'],
-      where: { email: authenticateUserDto.email },
-    })
-      .then((user) => {
-        if (!user) return { message: 'invalid credentials' };
-        return bcrypt
-          .compare(authenticateUserDto.password, user.password)
-          .then((result) => {
-            if (result === true) {
-              const accessToken = jwt.sign(
-                { id: user.id, email: user.email },
-                process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '300s' }, //usually 5min
-              );
-              const refreshToken = jwt.sign(
-                { id: user.id, email: user.email },
-                process.env.REFRESH_TOKEN_SECRET,
-                { expiresIn: '1d' },
-              );
-              //save refreshToken in db
-              return User.update(
-                { refreshToken: refreshToken },
-                { where: { email: authenticateUserDto.email } },
-              )
-                .then((updateResult) => {
-                  return {
-                    authenticated: true,
-                    accessToken: accessToken,
-                    refreshToken: refreshToken,
-                  } as AuthenticateUserRes;
-                })
-                .catch((err) => {
-                  console.error(err);
-                  return { authenticated: false, message: 'error occured' };
-                });
-            } else {
-              return { authenticated: false };
-            }
-          })
-          .catch((err) => {
-            console.error(err);
-            return { authenticated: false, message: 'error occured' };
-          });
+  authenticate(
+    authenticateUserDto: AuthenticateUserDto,
+  ): Promise<AuthenticateUserRes> {
+    return new Promise((resolve, reject) => {
+      User.findOne({
+        attributes: ['id', 'email', 'password'],
+        where: { email: authenticateUserDto.email },
       })
-      .catch((err) => {
-        console.error(err);
-        return { authenticated: false, message: 'error occured' };
-      });
+        .then((user) => {
+          if (!user) return reject({ message: 'invalid credentials' });
+          bcrypt
+            .compare(authenticateUserDto.password, user.password)
+            .then((result) => {
+              if (result === true) {
+                const accessToken = jwt.sign(
+                  { id: user.id, email: user.email },
+                  process.env.ACCESS_TOKEN_SECRET,
+                  { expiresIn: '300s' }, //usually 5min
+                );
+                const refreshToken = jwt.sign(
+                  { id: user.id, email: user.email },
+                  process.env.REFRESH_TOKEN_SECRET,
+                  { expiresIn: '1d' },
+                );
+                //save refreshToken in db
+                User.update(
+                  { refreshToken: refreshToken },
+                  { where: { email: authenticateUserDto.email } },
+                )
+                  .then((updateResult) =>
+                    resolve({
+                      email: user.email,
+                      authenticated: true,
+                      access_token: accessToken,
+                      refresh_token: refreshToken,
+                    }),
+                  )
+                  .catch((err) => reject(err));
+              } else {
+                return reject({ authenticated: false });
+              }
+            })
+            .catch((err) => reject(err));
+        })
+        .catch((err) => reject(err));
+    });
   }
 }
