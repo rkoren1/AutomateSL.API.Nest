@@ -41,5 +41,5 @@ export class User extends Model<User> {
   bot: Bot[];
 
   @HasMany(() => SharedBotUserSubscription, 'userId')
-  sharedBotUserSubscription: SharedBotUserSubscription[];
+  sharedBotUserSubscriptions: SharedBotUserSubscription[];
 }

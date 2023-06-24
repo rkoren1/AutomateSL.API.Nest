@@ -1,4 +1,9 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './core/database/database.module';
@@ -26,6 +31,9 @@ import { SubscriptionModule } from './modules/subscription/subscription.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(JwtMiddleware).exclude('terminal', 'user');
+    consumer
+      .apply(JwtMiddleware)
+      .exclude('user/(.*)', 'terminal/(.*)')
+      .forRoutes('*');
   }
 }

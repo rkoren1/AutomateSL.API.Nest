@@ -89,7 +89,7 @@ export class Bot extends Model<Bot> {
   user: User;
 
   @HasMany(() => Subscription, 'botId')
-  subscription: Subscription[];
+  subscriptions: Subscription[];
 }
 
 function encrypt(text) {

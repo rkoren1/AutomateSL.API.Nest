@@ -59,7 +59,7 @@ export class BotService {
               running: ele.running,
               uuid: ele.uuid,
               imageId: ele.imageId,
-              validSubscription: ele['subscriptions'].length > 0 ? true : false,
+              validSubscription: ele.subscriptions.length > 0 ? true : false,
             });
           });
           result[1].forEach((ele) => {

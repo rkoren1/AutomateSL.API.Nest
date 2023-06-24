@@ -55,5 +55,5 @@ export class SharedBot extends Model<SharedBot> {
   imageId: string;
 
   @HasMany(() => SharedBotUserSubscription, 'sharedBotId')
-  sharedBotUserSubscription: SharedBotUserSubscription;
+  sharedBotUserSubscriptions: SharedBotUserSubscription;
 }
