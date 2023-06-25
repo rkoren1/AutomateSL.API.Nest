@@ -1,15 +1,32 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { SharedBotUserSubscriptionService } from './shared-bot-user-subscription.service';
 import { CreateSharedBotUserSubscriptionDto } from './dto/create-shared-bot-user-subscription.dto';
 import { UpdateSharedBotUserSubscriptionDto } from './dto/update-shared-bot-user-subscription.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Shared-bot-user-subscription')
 @Controller('shared-bot-user-subscription')
 export class SharedBotUserSubscriptionController {
-  constructor(private readonly sharedBotUserSubscriptionService: SharedBotUserSubscriptionService) {}
+  constructor(
+    private readonly sharedBotUserSubscriptionService: SharedBotUserSubscriptionService,
+  ) {}
 
   @Post()
-  create(@Body() createSharedBotUserSubscriptionDto: CreateSharedBotUserSubscriptionDto) {
-    return this.sharedBotUserSubscriptionService.create(createSharedBotUserSubscriptionDto);
+  create(
+    @Body()
+    createSharedBotUserSubscriptionDto: CreateSharedBotUserSubscriptionDto,
+  ) {
+    return this.sharedBotUserSubscriptionService.create(
+      createSharedBotUserSubscriptionDto,
+    );
   }
 
   @Get()
@@ -23,8 +40,15 @@ export class SharedBotUserSubscriptionController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSharedBotUserSubscriptionDto: UpdateSharedBotUserSubscriptionDto) {
-    return this.sharedBotUserSubscriptionService.update(+id, updateSharedBotUserSubscriptionDto);
+  update(
+    @Param('id') id: string,
+    @Body()
+    updateSharedBotUserSubscriptionDto: UpdateSharedBotUserSubscriptionDto,
+  ) {
+    return this.sharedBotUserSubscriptionService.update(
+      +id,
+      updateSharedBotUserSubscriptionDto,
+    );
   }
 
   @Delete(':id')

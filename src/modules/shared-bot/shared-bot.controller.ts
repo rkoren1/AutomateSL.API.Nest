@@ -1,8 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { SharedBotService } from './shared-bot.service';
 import { CreateSharedBotDto } from './dto/create-shared-bot.dto';
 import { UpdateSharedBotDto } from './dto/update-shared-bot.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Shared-bot')
 @Controller('shared-bot')
 export class SharedBotController {
   constructor(private readonly sharedBotService: SharedBotService) {}
@@ -23,7 +33,10 @@ export class SharedBotController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSharedBotDto: UpdateSharedBotDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateSharedBotDto: UpdateSharedBotDto,
+  ) {
     return this.sharedBotService.update(+id, updateSharedBotDto);
   }
 
