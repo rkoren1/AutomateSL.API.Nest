@@ -14,9 +14,14 @@ import { TerminalModule } from './modules/terminal/terminal.module';
 import { SharedBotModule } from './modules/shared-bot/shared-bot.module';
 import { SharedBotUserSubscriptionModule } from './modules/shared-bot-user-subscription/shared-bot-user-subscription.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', './automatesl.client'),
+    }),
     DatabaseModule,
     DatabaseModule,
     BotModule,
