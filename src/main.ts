@@ -1,10 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { JwtMiddleware } from './core/guards/jwt/jwt.middleware';
+import * as fs from 'fs';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const httpsOptions = {
+    key: fs.readFileSync('src/private-key.pem'),
+    cert: fs.readFileSync('src/public-certificate.pem'),
+  };
+  const app = await NestFactory.create(AppModule, { httpsOptions });
   app.setGlobalPrefix('/api');
   app.enableCors({
     origin: [
@@ -15,6 +19,7 @@ async function bootstrap() {
     optionsSuccessStatus: 200,
     credentials: true,
   });
+
   const config = new DocumentBuilder()
     .setTitle('Automate SL API')
     .setDescription('Automate SL API')
