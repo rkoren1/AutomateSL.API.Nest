@@ -29,7 +29,7 @@
     "bcrypt": "^5.1.0",
     "class-validator": "^0.14.0",
     "jsonwebtoken": "^9.0.0",
-    "mysql2": "^3.4.0",
+    "mysql2": "^3.4.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "sequelize": "^6.32.1",
