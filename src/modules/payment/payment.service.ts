@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Package } from '../package/entities/package.entity';
-import { PaymentLog } from '../paymentlog/entities/payment-log.entity';
 import { Subscription } from '../subscription/entities/subscription.entity';
 import { User } from '../user/entities/user.entity';
+import { PaymentLog } from './entities/payment-log.entity';
 
 @Injectable()
 export class PaymentService {

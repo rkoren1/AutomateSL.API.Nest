@@ -2,7 +2,7 @@ import { Sequelize } from 'sequelize-typescript';
 import { DEVELOPMENT, PRODUCTION, SEQUELIZE, TEST } from 'src/constants';
 import { BotDb } from 'src/modules/bot/entities/bot.entity';
 import { Package } from 'src/modules/package/entities/package.entity';
-import { PaymentLog } from 'src/modules/paymentlog/entities/payment-log.entity';
+import { PaymentLog } from 'src/modules/payment/entities/payment-log.entity';
 import { SharedBotUserSubscription } from 'src/modules/shared-bot-user-subscription/entities/shared-bot-user-subscription.entity';
 import { SharedBot } from 'src/modules/shared-bot/entities/shared-bot.entity';
 import { Subscription } from 'src/modules/subscription/entities/subscription.entity';
