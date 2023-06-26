@@ -308,4 +308,23 @@ export class BotService {
         .catch((err: Error) => reject(err));
     });
   }
+  getSharedBots(userId: number) {
+    return new Promise((resolve, reject) => {
+      SharedBot.findAll({
+        attributes: [
+          'id',
+          'loginFirstName',
+          'loginLastName',
+          'running',
+          'uuid',
+          'imageId',
+        ],
+        include: [
+          { model: SharedBotUserSubscription, where: { userId: userId } },
+        ],
+      })
+        .then((result) => resolve(result))
+        .catch((err) => reject(err));
+    });
+  }
 }

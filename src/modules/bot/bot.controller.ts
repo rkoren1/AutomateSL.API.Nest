@@ -9,12 +9,14 @@ import {
   Res,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { SharedBot } from '../shared-bot/entities/shared-bot.entity';
 import { BotService } from './bot.service';
 import { CreateBotResponseDto } from './dto/create-bot-response.dto';
 import { CreateBotDto } from './dto/create-bot.dto';
 import { GetBotConfigurationQueryDto } from './dto/get-bot-configuration-query.dto';
 import { GetBotConfigurationResponseDto } from './dto/get-bot-configuration-response.dto';
 import { GetBotDto } from './dto/get-bot.dto';
+import { GetSharedBotsResponseDto } from './dto/get-shared-bots-response.dto';
 import { StartBotQueryDto } from './dto/start-bot-query.dto';
 
 @ApiTags('Bot')
@@ -151,5 +153,31 @@ export class BotController {
       .stopBot(data.botId, data.userId)
       .then((result) => res.json({ success: true }))
       .catch((err) => res.json({ success: false }));
+  }
+  @Get('getsharedbots')
+  @ApiOkResponse({
+    type: GetSharedBotsResponseDto,
+  })
+  getSharedBots(@Req() req, @Res() res) {
+    const data = {
+      userId: req['id'],
+    };
+    return this.botService
+      .getSharedBots(data.userId)
+      .then((result: SharedBot[]) => {
+        const response = new Array<GetSharedBotsResponseDto>();
+        result.forEach((ele) => {
+          response.push({
+            id: ele.id,
+            loginName: ele.loginFirstName,
+            loginLastName: ele.loginLastName,
+            running: ele.running,
+            uuid: ele.uuid,
+            imageId: ele.imageId,
+          });
+        });
+        return res.json(response);
+      })
+      .catch((err) => res.sendStatus(500));
   }
 }
