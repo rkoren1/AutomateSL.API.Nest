@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { JwtMiddleware } from './core/guards/jwt/jwt.middleware';
+import { discClient } from './core/services/discord-bot.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,5 +23,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/swagger', app, document);
   await app.listen(3000);
+  discClient.login(process.env.DISC_BOT_TOKEN);
 }
 bootstrap();
