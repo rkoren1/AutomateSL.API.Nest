@@ -1,13 +1,19 @@
-import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query, Res } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Result } from 'src/core/constants/constants';
 import { BotDb } from '../bot/entities/bot.entity';
+import { User } from '../user/entities/user.entity';
 import { AddTerminalBodyDto } from './dto/add-terminal-body.dto';
 import { GetAllBotsQueryDto } from './dto/get-all-bots-query.dto';
 import { GetAllBotsResponseDto } from './dto/get-all-bots-response.dto';
+import { isRegisteredQueryDto } from './dto/is-registered-query.dto';
 import { PaySubscriptionDto } from './dto/pay-subscription.dto';
 import { RegisterBodyDto } from './dto/register-body.dto';
+import { SetUserPasswordBodyDto } from './dto/set-user-password-body.dto';
+import { SetUserPasswordQueryDto } from './dto/set-user-password-query.dto';
 import { SharedActionsResponseDto } from './dto/shared-actions-response.dto';
+import { UpdateTerminalActivityQueryDto } from './dto/update-terminal-activity-query.dto';
+import { UpdateTerminalOwnerBodyDto } from './dto/update-terminal-owner-body.dto';
 import { TerminalOwner } from './entities/terminal-owner.entity';
 import { TerminalService } from './terminal.service';
 
@@ -123,5 +129,122 @@ export class TerminalController {
           custom: {},
         }),
       );
+  }
+  @Get('isregistered')
+  @ApiOkResponse({ type: SharedActionsResponseDto })
+  isRegistered(@Query() query: isRegisteredQueryDto, @Res() res) {
+    const data = {
+      uuid: query.uuid,
+    };
+    return this.terminalService
+      .isRegistered(data.uuid)
+      .then((result: User) => {
+        if (result) {
+          return res.json({
+            result: Result.OK,
+            resulttext: 'registered_user',
+            custom: { id: result?.id, uuid: data.uuid },
+          });
+        }
+        return res.json({
+          result: Result.OK,
+          resulttext: 'unregistered_user',
+          custom: { uuid: data.uuid },
+        });
+      })
+      .catch((err) =>
+        res.json({
+          result: Result.FAIL,
+          resulttext: 'FAIL',
+          custom: {},
+        }),
+      );
+  }
+  @Post('updateterminalactivity')
+  @ApiOkResponse({ type: SharedActionsResponseDto })
+  updateTerminalActivity(
+    @Res() res,
+    @Query() query: UpdateTerminalActivityQueryDto,
+  ) {
+    const data = {
+      lastActive: new Date(),
+      terminalId: query.terminalId,
+    };
+    return this.terminalService
+      .updateTerminalActivity(data)
+      .then((result) =>
+        res.json({
+          result: Result.OK,
+          resulttext: 'Last activity prolonged',
+          custom: {},
+        }),
+      )
+      .catch((err) =>
+        res.json({
+          result: Result.FAIL,
+          resulttext: 'FAIL',
+          custom: {},
+        }),
+      );
+  }
+  @Put('updateterminalowner')
+  @ApiOkResponse({ type: SharedActionsResponseDto })
+  updateTerminalOwner(@Res() res, @Body() body: UpdateTerminalOwnerBodyDto) {
+    const data: UpdateTerminalOwnerBodyDto = {
+      terminalId: body.terminalId,
+      avatarName: body.avatarName,
+      avatarUUID: body.avatarUUID,
+      parcelName: body.parcelName,
+      slUrl: body.slUrl,
+    };
+
+    return this.terminalService
+      .updateTerminalOwner(data)
+      .then((result) =>
+        res.json({
+          result: Result.OK,
+          resulttext: 'Terminal updated successfully',
+          custom: {},
+        }),
+      )
+      .catch((err) =>
+        res.json({
+          result: Result.FAIL,
+          resulttext: 'Error occured',
+          custom: {},
+        }),
+      );
+  }
+  @Put('setuserpassword')
+  @ApiOkResponse({ type: SharedActionsResponseDto })
+  setUserPassword(
+    @Res() res,
+    @Body() body: SetUserPasswordBodyDto,
+    @Query() query: SetUserPasswordQueryDto,
+  ) {
+    const data = {
+      userUUID: query.userUUID,
+      password: body.password,
+    };
+    return this.terminalService
+      .setUserPassword(data.userUUID, data.password)
+      .then((user: User) =>
+        res.json({
+          result: Result.OK,
+          resulttext: 'password_updated',
+          custom: {
+            id: data.userUUID,
+            password: data.password,
+            email: user.email,
+          },
+        }),
+      )
+      .catch((err) => {
+        res.json({
+          result: Result.FAIL,
+          resulttext: 'password_update_fail',
+          custom: { id: data.userUUID },
+        });
+      });
   }
 }

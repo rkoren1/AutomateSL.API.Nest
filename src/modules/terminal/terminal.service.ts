@@ -6,6 +6,7 @@ import { BotDb } from '../bot/entities/bot.entity';
 import { Subscription } from '../subscription/entities/subscription.entity';
 import { User } from '../user/entities/user.entity';
 import { PaySubscriptionDto } from './dto/pay-subscription.dto';
+import { UpdateTerminalOwnerBodyDto } from './dto/update-terminal-owner-body.dto';
 import { TerminalOwner } from './entities/terminal-owner.entity';
 
 @Injectable()
@@ -83,6 +84,58 @@ export class TerminalService {
       })
         .then((result) => resolve(result))
         .catch((err) => reject(err));
+    });
+  }
+  isRegistered(uuid: string) {
+    return new Promise((resolve, reject) => {
+      return User.findOne({ attributes: ['id'], where: { uuid: uuid } })
+        .then((user) => {
+          if (user) return resolve(user);
+          return resolve(null);
+        })
+        .catch((err) => reject(err));
+    });
+  }
+  updateTerminalActivity = (data) => {
+    return new Promise((resolve, reject) => {
+      return TerminalOwner.update(
+        { lastActive: data.lastActive },
+        { where: { id: data.terminalId } },
+      )
+        .then((result) => resolve(result))
+        .catch((err) => reject(err));
+    });
+  };
+  updateTerminalOwner(data: UpdateTerminalOwnerBodyDto) {
+    return new Promise((resolve, reject) => {
+      const today = new Date();
+      return TerminalOwner.update(
+        {
+          avatarName: data.avatarName,
+          avatarUuid: data.avatarUUID,
+          parcelName: data.parcelName,
+          slUrl: data.slUrl,
+          lastActive: today,
+        },
+        { where: { id: data.terminalId } },
+      )
+        .then((result) => resolve(result))
+        .catch((err) => reject(err));
+    });
+  }
+  setUserPassword(userUUID: string, password: string) {
+    return new Promise((resolve, reject) => {
+      bcrypt.hash(password, 10).then((hashedPass) => {
+        User.update({ password: hashedPass }, { where: { uuid: userUUID } })
+          .then((res) => {
+            User.findOne({ where: { uuid: userUUID } })
+              .then((user) => {
+                return resolve(user);
+              })
+              .catch((err) => reject(err));
+          })
+          .catch((err) => reject(err));
+      });
     });
   }
 }
