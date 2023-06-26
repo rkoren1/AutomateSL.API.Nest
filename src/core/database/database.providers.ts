@@ -1,6 +1,8 @@
 import { Sequelize } from 'sequelize-typescript';
 import { DEVELOPMENT, PRODUCTION, SEQUELIZE, TEST } from 'src/constants';
+import { BotLog } from 'src/modules/bot-log/entities/bot-log.entity';
 import { BotDb } from 'src/modules/bot/entities/bot.entity';
+import { DiscordSettings } from 'src/modules/discord-settings/entities/discord-setting.entity';
 import { Package } from 'src/modules/package/entities/package.entity';
 import { PaymentLog } from 'src/modules/payment/entities/payment-log.entity';
 import { SharedBotUserSubscription } from 'src/modules/shared-bot-user-subscription/entities/shared-bot-user-subscription.entity';
@@ -39,6 +41,8 @@ export const databaseProviders = [
         SharedBotUserSubscription,
         PaymentLog,
         Package,
+        DiscordSettings,
+        BotLog,
       ]);
       await sequelize.sync();
       return sequelize;

@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Query,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BotService } from './bot.service';
 import { CreateBotResponseDto } from './dto/create-bot-response.dto';
@@ -6,6 +15,7 @@ import { CreateBotDto } from './dto/create-bot.dto';
 import { GetBotConfigurationQueryDto } from './dto/get-bot-configuration-query.dto';
 import { GetBotConfigurationResponseDto } from './dto/get-bot-configuration-response.dto';
 import { GetBotDto } from './dto/get-bot.dto';
+import { StartBotQueryDto } from './dto/start-bot-query.dto';
 
 @ApiTags('Bot')
 @Controller('bot')
@@ -104,5 +114,28 @@ export class BotController {
         return res.json(response);
       })
       .catch((err) => res.sendStatus(500));
+  }
+  @Put('startbot')
+  @ApiOkResponse({
+    type: CreateBotResponseDto,
+  })
+  startBot(@Query() query: StartBotQueryDto, @Req() req, @Res() res) {
+    const data = {
+      botId: req.query.botId,
+      userId: req['id'],
+    };
+    return this.botService
+      .startBot(data)
+      .then((result: { changedRows: number } | any) => {
+        if (result.changedRows === 0)
+          return res.status(400).json({
+            success: false,
+            message: 'SL Account info is missing',
+          });
+        return res.json({ success: true });
+      })
+      .catch((err) => {
+        return res.json({ success: false });
+      });
   }
 }

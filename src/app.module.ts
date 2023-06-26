@@ -1,24 +1,20 @@
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './core/database/database.module';
 import { JwtMiddleware } from './core/guards/jwt/jwt.middleware';
 import { BotModule } from './modules/bot/bot.module';
-import { UserModule } from './modules/user/user.module';
-import { TerminalModule } from './modules/terminal/terminal.module';
-import { SharedBotModule } from './modules/shared-bot/shared-bot.module';
-import { SharedBotUserSubscriptionModule } from './modules/shared-bot-user-subscription/shared-bot-user-subscription.module';
-import { SubscriptionModule } from './modules/subscription/subscription.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
-import { PaymentModule } from './modules/payment/payment.module';
+import { DiscordSettingsModule } from './modules/discord-settings/discord-settings.module';
 import { PackageModule } from './modules/package/package.module';
-import { PaymentlogModule } from './modules/paymentlog/paymentlog.module';
+import { PaymentModule } from './modules/payment/payment.module';
+import { SharedBotUserSubscriptionModule } from './modules/shared-bot-user-subscription/shared-bot-user-subscription.module';
+import { SharedBotModule } from './modules/shared-bot/shared-bot.module';
+import { SubscriptionModule } from './modules/subscription/subscription.module';
+import { TerminalModule } from './modules/terminal/terminal.module';
+import { UserModule } from './modules/user/user.module';
+import { BotLogModule } from './modules/bot-log/bot-log.module';
 
 @Module({
   imports: [
@@ -35,7 +31,8 @@ import { PaymentlogModule } from './modules/paymentlog/paymentlog.module';
     SharedBotUserSubscriptionModule,
     PaymentModule,
     PackageModule,
-    PaymentlogModule,
+    DiscordSettingsModule,
+    BotLogModule,
   ],
   controllers: [AppController],
   providers: [AppService],
