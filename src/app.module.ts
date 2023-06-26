@@ -5,6 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './core/database/database.module';
 import { JwtMiddleware } from './core/guards/jwt/jwt.middleware';
+import { InitService } from './init.service';
+import { BotLogModule } from './modules/bot-log/bot-log.module';
 import { BotModule } from './modules/bot/bot.module';
 import { DiscordSettingsModule } from './modules/discord-settings/discord-settings.module';
 import { PackageModule } from './modules/package/package.module';
@@ -14,7 +16,6 @@ import { SharedBotModule } from './modules/shared-bot/shared-bot.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { TerminalModule } from './modules/terminal/terminal.module';
 import { UserModule } from './modules/user/user.module';
-import { BotLogModule } from './modules/bot-log/bot-log.module';
 
 @Module({
   imports: [
@@ -35,7 +36,7 @@ import { BotLogModule } from './modules/bot-log/bot-log.module';
     BotLogModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, InitService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
