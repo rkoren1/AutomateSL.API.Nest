@@ -8,6 +8,7 @@ import { PaymentLog } from 'src/modules/payment/entities/payment-log.entity';
 import { SharedBotUserSubscription } from 'src/modules/shared-bot-user-subscription/entities/shared-bot-user-subscription.entity';
 import { SharedBot } from 'src/modules/shared-bot/entities/shared-bot.entity';
 import { Subscription } from 'src/modules/subscription/entities/subscription.entity';
+import { TerminalOwner } from 'src/modules/terminal/entities/terminal-owner.entity';
 import { Terminal } from 'src/modules/terminal/entities/terminal.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { databaseConfig } from './database.config';
@@ -43,6 +44,7 @@ export const databaseProviders = [
         Package,
         DiscordSettings,
         BotLog,
+        TerminalOwner,
       ]);
       await sequelize.sync();
       return sequelize;

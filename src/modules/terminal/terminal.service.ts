@@ -1,26 +1,88 @@
 import { Injectable } from '@nestjs/common';
-import { CreateTerminalDto } from './dto/create-terminal.dto';
-import { UpdateTerminalDto } from './dto/update-terminal.dto';
+import * as bcrypt from 'bcrypt';
+import { ExtensionPeriodUnit } from 'src/core/constants/constants';
+import { addDaysToDate } from 'src/core/services/helper.service';
+import { BotDb } from '../bot/entities/bot.entity';
+import { Subscription } from '../subscription/entities/subscription.entity';
+import { User } from '../user/entities/user.entity';
+import { PaySubscriptionDto } from './dto/pay-subscription.dto';
+import { TerminalOwner } from './entities/terminal-owner.entity';
 
 @Injectable()
 export class TerminalService {
-  create(createTerminalDto: CreateTerminalDto) {
-    return 'This action adds a new terminal';
+  getAllBotsFromUserUuid(uuid: string) {
+    return new Promise((resolve, reject) => {
+      return BotDb.findAll({
+        attributes: ['id', 'loginFirstName', 'running', 'imageId', 'packageId'],
+        where: {
+          uuid: uuid,
+        },
+      })
+        .then((result) => resolve(result))
+        .catch((err) => reject(err));
+    });
   }
-
-  findAll() {
-    return `This action returns all terminal`;
+  paySubscription(data: PaySubscriptionDto) {
+    return new Promise((resolve, reject) => {
+      const today = new Date();
+      let endDate;
+      if (data.extensionTimeUnit === ExtensionPeriodUnit.WEEK) {
+        endDate = addDaysToDate(today, data.extensionTime * 7);
+      } else if (data.extensionTimeUnit === ExtensionPeriodUnit.MONTH) {
+        endDate = addDaysToDate(today, data.extensionTime * 30);
+      } else {
+        return reject('Invalid time unit');
+      }
+      Subscription.create({
+        subscriptionStart: today,
+        subscriptionEnd: endDate,
+        botId: data.botId,
+        packageId: data.packageId,
+      })
+        .then((result) => resolve(endDate))
+        .catch((err) => reject(err));
+    });
   }
-
-  findOne(id: number) {
-    return `This action returns a #${id} terminal`;
+  generatePassword(length) {
+    let password = '';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let i = 0; i < length; i++) {
+      password += characters.charAt(
+        Math.floor(Math.random() * characters.length),
+      );
+    }
+    return password;
   }
-
-  update(id: number, updateTerminalDto: UpdateTerminalDto) {
-    return `This action updates a #${id} terminal`;
+  terminalRegister(data) {
+    return new Promise((resolve, reject) => {
+      bcrypt.hash(data.password, 10).then((hashedPass) => {
+        return User.create({
+          email: data.email,
+          uuid: data.uuid,
+          avatarName: data.avatarName,
+          password: hashedPass,
+          l$Balance: 0,
+        })
+          .then((result) => resolve(data.password))
+          .catch((err) => {
+            console.error(err);
+            return reject(err);
+          });
+      });
+    });
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} terminal`;
+  addTerminal(data) {
+    return new Promise((resolve, reject) => {
+      return TerminalOwner.create({
+        avatarName: data.avatarName,
+        avatarUuid: data.avatarUUID,
+        parcelName: data.parcelName,
+        slUrl: data.slUrl,
+        lastActive: data.lastActive,
+      })
+        .then((result) => resolve(result))
+        .catch((err) => reject(err));
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SharedBotService } from './shared-bot.service';
 
@@ -6,9 +6,4 @@ import { SharedBotService } from './shared-bot.service';
 @Controller('shared-bot')
 export class SharedBotController {
   constructor(private readonly sharedBotService: SharedBotService) {}
-
-  @Get()
-  findAll() {
-    return this.sharedBotService.findAll();
-  }
 }
