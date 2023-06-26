@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { GetLDollarBalanceReponseDto } from './dto/get-ldollar-balance-response.dto';
 import { PayForPackageResponseDto } from './dto/pay-for-package-response.dto';
@@ -13,21 +13,21 @@ export class PaymentController {
   @ApiOkResponse({
     type: GetLDollarBalanceReponseDto,
   })
-  getLDollarBalance(@Param('id') userId: number) {
-    return this.paymentService.getLDollarBalance(+userId);
+  getLDollarBalance(@Req() req) {
+    return this.paymentService.getLDollarBalance(req.id);
   }
 
-  @Get('payforpackage')
+  @Post('payforpackage')
   @ApiOkResponse({
     type: PayForPackageResponseDto,
   })
   payForPackage(
-    @Param('id') userId: string,
+    @Req() req,
     @Body() payForPackageDto: PayForPackageDto,
     @Res() res,
   ) {
     const data = {
-      userId: userId,
+      userId: req.id,
       packageId: payForPackageDto.packageId,
       dateUnit: payForPackageDto.dateUnit,
       amountOfDateUnits: payForPackageDto.amountOfDateUnits,

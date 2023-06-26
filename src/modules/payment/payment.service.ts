@@ -17,9 +17,12 @@ export class PaymentService {
   getLDollarBalance(userId: number) {
     return User.findOne({ where: { id: userId } })
       .then((user) => {
-        return user.l$Balance;
+        return { lDollarBalance: user.l$Balance };
       })
-      .catch((err) => err);
+      .catch((err) => {
+        console.error(err);
+        return { lDollarBalance: '??' };
+      });
   }
   payForPackage(data: any) {
     return new Promise<{ success: boolean; message: string }>(
