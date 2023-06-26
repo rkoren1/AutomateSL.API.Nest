@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Subscription } from 'src/modules/subscription/entities/subscription.entity';
 
 @Table({ underscored: true, tableName: 'package' })
 export class Package extends Model<Package> {
@@ -36,4 +37,6 @@ export class Package extends Model<Package> {
     type: DataType.INTEGER,
   })
   couponId: number;
+  @HasMany(() => Subscription, 'packageId')
+  subscriptions: Subscription[];
 }

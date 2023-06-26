@@ -7,6 +7,7 @@ import { Injectable } from '@nestjs/common';
 import { forkJoin } from 'rxjs';
 import { Op } from 'sequelize';
 import urlMetadata from 'url-metadata';
+import { Package } from '../package/entities/package.entity';
 import { SharedBotUserSubscription } from '../shared-bot-user-subscription/entities/shared-bot-user-subscription.entity';
 import { SharedBot } from '../shared-bot/entities/shared-bot.entity';
 import { Subscription } from '../subscription/entities/subscription.entity';
@@ -147,6 +148,37 @@ export class BotService {
           reject(err);
         },
       });
+    });
+  }
+  getBotConfiguration(data) {
+    return new Promise((resolve, reject) => {
+      return BotDb.findOne({
+        attributes: [
+          'id',
+          'loginFirstName',
+          'imageId',
+          'loginLastName',
+          'loginSpawnLocation',
+          'loginRegion',
+        ],
+        where: {
+          loginFirstName: data.botFirstName,
+          loginLastName: data.botLastName,
+          userId: data.userId,
+        },
+        include: {
+          model: Subscription,
+          attributes: ['subscriptionStart', 'subscriptionEnd'],
+          include: [{ model: Package, attributes: ['id', 'packageName'] }],
+        },
+      })
+        .then((result) => {
+          return resolve(result.dataValues);
+        })
+        .catch((err) => {
+          console.error(err);
+          return reject(err);
+        });
     });
   }
 }

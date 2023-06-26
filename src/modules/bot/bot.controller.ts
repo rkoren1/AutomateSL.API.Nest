@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Req, Res } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { BotService } from './bot.service';
 import { CreateBotResponseDto } from './dto/create-bot-response.dto';
 import { CreateBotDto } from './dto/create-bot.dto';
+import { GetBotConfigurationQueryDto } from './dto/get-bot-configuration-query.dto';
+import { GetBotConfigurationResponseDto } from './dto/get-bot-configuration-response.dto';
 import { GetBotDto } from './dto/get-bot.dto';
 
 @ApiTags('Bot')
@@ -60,5 +62,47 @@ export class BotController {
   getAllBots(@Req() req) {
     const userId = req.id;
     return this.botService.getAllBots(userId).then((res) => res);
+  }
+  @Get('getbotconfiguration')
+  @ApiOkResponse({
+    type: GetBotConfigurationResponseDto,
+  })
+  getBotConfiguration(
+    @Req() req,
+    @Res() res,
+    @Query()
+    queryParams: GetBotConfigurationQueryDto,
+  ) {
+    const data = {
+      botFirstName: queryParams.firstName,
+      botLastName: queryParams.lastName,
+      userId: req.id,
+    };
+    this.botService
+      .getBotConfiguration(data)
+      .then((result: any) => {
+        if (!result)
+          return res.status(404).json({
+            id: null,
+            loginFirstName: null,
+            loginSpawnLocation: null,
+            imageId: null,
+            message: "Bot doesn't exist",
+          });
+        let response: GetBotConfigurationResponseDto;
+        //dont send back "Resident" in name
+        if (
+          result.loginLastName === 'Resident' ||
+          result.loginLastName === null
+        ) {
+          response = result;
+        } else {
+          response = result;
+          response.loginFirstName =
+            result.loginFirstName + '.' + result.loginLastName;
+        }
+        return res.json(response);
+      })
+      .catch((err) => res.sendStatus(500));
   }
 }

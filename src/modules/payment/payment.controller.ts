@@ -1,10 +1,11 @@
 import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
-import { ApiOkResponse } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { GetLDollarBalanceReponseDto } from './dto/get-ldollar-balance-response.dto';
 import { PayForPackageResponseDto } from './dto/pay-for-package-response.dto';
 import { PayForPackageDto } from './dto/pay-for-package.dto';
 import { PaymentService } from './payment.service';
 
+@ApiTags('Payment')
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}

@@ -6,6 +6,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 import { BotDb } from 'src/modules/bot/entities/bot.entity';
+import { Package } from 'src/modules/package/entities/package.entity';
 
 @Table({ underscored: true, tableName: 'subscription' })
 export class Subscription extends Model<Subscription> {
@@ -38,4 +39,6 @@ export class Subscription extends Model<Subscription> {
 
   @BelongsTo(() => BotDb, 'botId')
   bot: BotDb;
+  @BelongsTo(() => Package, 'packageId')
+  package: Package;
 }
