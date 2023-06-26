@@ -16,6 +16,9 @@ import { SharedBotUserSubscriptionModule } from './modules/shared-bot-user-subsc
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { PaymentModule } from './modules/payment/payment.module';
+import { PackageModule } from './modules/package/package.module';
+import { PaymentlogModule } from './modules/paymentlog/paymentlog.module';
 
 @Module({
   imports: [
@@ -30,6 +33,9 @@ import { join } from 'path';
     SharedBotModule,
     SubscriptionModule,
     SharedBotUserSubscriptionModule,
+    PaymentModule,
+    PackageModule,
+    PaymentlogModule,
   ],
   controllers: [AppController],
   providers: [AppService],

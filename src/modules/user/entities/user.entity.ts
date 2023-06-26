@@ -1,5 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
-import { Bot } from 'src/modules/bot/entities/bot.entity';
+import { BotDb } from 'src/modules/bot/entities/bot.entity';
 import { SharedBotUserSubscription } from 'src/modules/shared-bot-user-subscription/entities/shared-bot-user-subscription.entity';
 @Table({ underscored: true, tableName: 'user' })
 export class User extends Model<User> {
@@ -37,8 +37,8 @@ export class User extends Model<User> {
   })
   avatarName: string;
 
-  @HasMany(() => Bot, 'userId')
-  bot: Bot[];
+  @HasMany(() => BotDb, 'userId')
+  bot: BotDb[];
 
   @HasMany(() => SharedBotUserSubscription, 'userId')
   sharedBotUserSubscriptions: SharedBotUserSubscription[];

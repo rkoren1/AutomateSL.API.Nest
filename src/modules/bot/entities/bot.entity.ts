@@ -11,7 +11,7 @@ import { Subscription } from 'src/modules/subscription/entities/subscription.ent
 import { User } from 'src/modules/user/entities/user.entity';
 
 @Table({ underscored: true, tableName: 'bot' })
-export class Bot extends Model<Bot> {
+export class BotDb extends Model<BotDb> {
   @Column({
     type: DataType.INTEGER,
     autoIncrement: true,
