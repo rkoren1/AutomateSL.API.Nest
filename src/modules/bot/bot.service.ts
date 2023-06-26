@@ -293,4 +293,19 @@ export class BotService {
         });
     });
   }
+  stopBot(botId: number, userId: number) {
+    return new Promise((resolve, reject) => {
+      return this.botInstances[botId]
+        .close()
+        .then(() => {
+          return BotDb.update(
+            { running: false },
+            { where: { id: botId, userId: userId } },
+          )
+            .then((result) => resolve(result))
+            .catch((err) => reject(err));
+        })
+        .catch((err: Error) => reject(err));
+    });
+  }
 }

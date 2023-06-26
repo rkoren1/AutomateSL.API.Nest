@@ -138,4 +138,18 @@ export class BotController {
         return res.json({ success: false });
       });
   }
+  @Put('stopbot')
+  @ApiOkResponse({
+    type: CreateBotResponseDto,
+  })
+  stopBot(@Query() query: StartBotQueryDto, @Req() req, @Res() res) {
+    const data = {
+      botId: req.query.botId,
+      userId: req['id'],
+    };
+    return this.botService
+      .stopBot(data.botId, data.userId)
+      .then((result) => res.json({ success: true }))
+      .catch((err) => res.json({ success: false }));
+  }
 }

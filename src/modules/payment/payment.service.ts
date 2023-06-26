@@ -1,4 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import {
+  addDaysToDate,
+  addMonthsToDate,
+} from 'src/core/services/helper.service';
 import { Package } from '../package/entities/package.entity';
 import { Subscription } from '../subscription/entities/subscription.entity';
 import { User } from '../user/entities/user.entity';
@@ -6,14 +10,6 @@ import { PaymentLog } from './entities/payment-log.entity';
 
 @Injectable()
 export class PaymentService {
-  addDaysToDate(dateObj, numberOfDays) {
-    dateObj.setDate(dateObj.getDate() + numberOfDays);
-    return dateObj;
-  }
-  addMonthsToDate(dateObj, numberOfMonths) {
-    dateObj.setMonth(dateObj.getMonth() + numberOfMonths);
-    return dateObj;
-  }
   getLDollarBalance(userId: number) {
     return User.findOne({ where: { id: userId } })
       .then((user) => {
@@ -72,13 +68,13 @@ export class PaymentService {
                         let endDate = sub.subscriptionEnd;
                         switch (data.dateUnit) {
                           case 'Week':
-                            endDate = this.addDaysToDate(
+                            endDate = addDaysToDate(
                               endDate,
                               data.amountOfDateUnits * 7,
                             );
                             break;
                           case 'Month':
-                            endDate = this.addMonthsToDate(
+                            endDate = addMonthsToDate(
                               endDate,
                               data.amountOfDateUnits,
                             );
@@ -115,13 +111,13 @@ export class PaymentService {
                         let endDate = new Date();
                         switch (data.dateUnit) {
                           case 'Week':
-                            endDate = this.addDaysToDate(
+                            endDate = addDaysToDate(
                               endDate,
                               data.amountOfDateUnits * 7,
                             );
                             break;
                           case 'Month':
-                            endDate = this.addMonthsToDate(
+                            endDate = addMonthsToDate(
                               endDate,
                               data.amountOfDateUnits,
                             );
