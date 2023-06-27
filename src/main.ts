@@ -19,6 +19,7 @@ async function bootstrap() {
   });
   const config = new DocumentBuilder()
     .setTitle('Automate SL API')
+    .addApiKey({ type: 'apiKey', name: 'apiKey', in: 'query' }, 'apiKey')
     .setDescription('Automate SL API')
     .setVersion('1.0')
     .build();

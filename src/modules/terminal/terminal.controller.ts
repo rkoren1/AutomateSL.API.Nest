@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Put, Query, Res } from '@nestjs/common';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Result } from 'src/core/constants/constants';
 import { BotDb } from '../bot/entities/bot.entity';
 import { User } from '../user/entities/user.entity';
@@ -19,18 +19,15 @@ import { TerminalService } from './terminal.service';
 import { AddBalanceBodyDto } from './dto/add-balance-body.dto';
 
 @ApiTags('Terminal')
+@ApiSecurity('apiKey')
 @Controller('terminal')
 export class TerminalController {
   constructor(private readonly terminalService: TerminalService) {}
   @Get('getallbots')
   @ApiOkResponse({ type: [GetAllBotsResponseDto] })
   getAllBots(@Query() query: GetAllBotsQueryDto, @Res() res) {
-    const data = {
-      uuid: query.uuid,
-      apikey: query.apiKey,
-    };
     return this.terminalService
-      .getAllBotsFromUserUuid(data.uuid)
+      .getAllBotsFromUserUuid(query.uuid)
       .then((result: BotDb[]) => {
         const response = new Array<GetAllBotsResponseDto>();
         result.forEach((ele) => {

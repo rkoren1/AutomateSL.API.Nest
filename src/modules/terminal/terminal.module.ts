@@ -9,6 +9,6 @@ import { TerminalApikeyMiddleware } from 'src/core/guards/terminal-apikey/termin
 })
 export class TerminalModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(TerminalApikeyMiddleware);
+    consumer.apply(TerminalApikeyMiddleware).forRoutes('*');
   }
 }
