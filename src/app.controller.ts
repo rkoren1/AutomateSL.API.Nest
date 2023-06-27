@@ -50,4 +50,29 @@ export class AppController {
         (err) => res.sendStatus(403), //unauthorized
       );
   }
+  @Get('logout')
+  logout(@Req() req, @Res() res) {
+    //on client, also delete accessToken
+    const cookies = req.cookies;
+    if (!cookies?.jwt) return res.sendStatus(204); //no content
+    const refreshToken = cookies.jwt;
+    //find user with upper refresh token
+    User.findOne({
+      attributes: ['email'],
+      where: { refreshToken: refreshToken },
+    })
+      .then((foundUser) => {
+        //delete refreshtoken in db (make it empty string)
+        User.update({ refreshToken: '' }, { where: { email: foundUser.email } })
+          .then((result) => {
+            res.clearCookie('jwt', { httpOnly: true, maxAge: 86400000 }); //secure: true - only serves on https
+            return res.sendStatus(204);
+          })
+          .catch((err) => res.sendStatus(500));
+      })
+      .catch((err) => {
+        res.clearCookie('jwt', { httpOnly: true, maxAge: 86400000 });
+        return res.sendStatus(204);
+      });
+  }
 }
