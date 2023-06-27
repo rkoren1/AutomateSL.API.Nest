@@ -383,4 +383,25 @@ export class BotService {
         .catch((err) => reject(err));
     });
   }
+  refreshBotStatus(botId: number) {
+    return new Promise((resolve, reject) => {
+      BotDb.findOne({ where: { id: botId } }).then((bot) => {
+        //if bot doesnt exist and is running set running to false
+        if (!this.botInstances[botId] && bot.running) {
+          return BotDb.update(
+            { running: false },
+            { where: { id: botId } },
+          ).then(() => resolve(true));
+        }
+        //else check if bot is offline and set running to false
+        if (this.botInstances[botId]?.currentRegion === undefined) {
+          return BotDb.update(
+            { running: false },
+            { where: { id: botId } },
+          ).then(() => resolve(true));
+        }
+        return resolve(true);
+      });
+    });
+  }
 }

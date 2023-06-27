@@ -8,6 +8,8 @@ import { User } from '../user/entities/user.entity';
 import { PaySubscriptionDto } from './dto/pay-subscription.dto';
 import { UpdateTerminalOwnerBodyDto } from './dto/update-terminal-owner-body.dto';
 import { TerminalOwner } from './entities/terminal-owner.entity';
+import { AddBalanceBodyDto } from './dto/add-balance-body.dto';
+import { PaymentLog } from '../payment/entities/payment-log.entity';
 
 @Injectable()
 export class TerminalService {
@@ -138,4 +140,15 @@ export class TerminalService {
       });
     });
   }
+  addBalance = (data: AddBalanceBodyDto) => {
+    return new Promise((resolve, reject) => {
+      PaymentLog.create({ userUuid: data.UUID, amount: data.lDollarAmount });
+      User.findOne({ where: { uuid: data.UUID } }).then((user) => {
+        const newBalance = user.l$Balance + data.lDollarAmount;
+        User.update({ l$Balance: newBalance }, { where: { uuid: data.UUID } })
+          .then((res) => resolve(newBalance))
+          .catch((err) => reject(err));
+      });
+    });
+  };
 }

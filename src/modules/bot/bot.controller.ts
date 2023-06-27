@@ -25,6 +25,7 @@ import { GetSharedBotsResponseDto } from './dto/get-shared-bots-response.dto';
 import { SetBotConfigurationBodyDto } from './dto/set-bot-configuration-body.dto';
 import { SetDiscordSettingsBodyDto } from './dto/set-discord-settings-body.dto';
 import { StartBotQueryDto } from './dto/start-bot-query.dto';
+import { RefreshBotStatusQueryDto } from './dto/refresh-bot-status-query.dto';
 
 @ApiTags('Bot')
 @Controller('bot')
@@ -265,5 +266,18 @@ export class BotController {
           message: 'Failed to update bot configuration',
         });
       });
+  }
+  @Get('refreshbotstatus')
+  @ApiOkResponse({
+    type: CreateBotResponseDto,
+  })
+  refreshBotStatus(
+    @Res() res,
+    @Query()
+    query: RefreshBotStatusQueryDto,
+  ) {
+    this.botService.refreshBotStatus(query.botId).then((isSuccessful) => {
+      return res.json({ success: true, message: 'Refresh Successful' });
+    });
   }
 }

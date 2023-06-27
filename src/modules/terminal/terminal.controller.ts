@@ -16,6 +16,7 @@ import { UpdateTerminalActivityQueryDto } from './dto/update-terminal-activity-q
 import { UpdateTerminalOwnerBodyDto } from './dto/update-terminal-owner-body.dto';
 import { TerminalOwner } from './entities/terminal-owner.entity';
 import { TerminalService } from './terminal.service';
+import { AddBalanceBodyDto } from './dto/add-balance-body.dto';
 
 @ApiTags('Terminal')
 @Controller('terminal')
@@ -246,5 +247,25 @@ export class TerminalController {
           custom: { id: data.userUUID },
         });
       });
+  }
+  @Put('addbalance')
+  @ApiOkResponse({ type: SharedActionsResponseDto })
+  addBalance(@Res() res, @Body() body: AddBalanceBodyDto) {
+    this.terminalService
+      .addBalance(body)
+      .then((newBalance: number) =>
+        res.json({
+          result: Result.OK,
+          resulttext: 'payment_success',
+          custom: { UUID: body.UUID, newBalance: newBalance },
+        }),
+      )
+      .catch((err) =>
+        res.json({
+          result: Result.FAIL,
+          resulttext: 'payment_fail',
+          custom: { UUID: body.UUID },
+        }),
+      );
   }
 }
