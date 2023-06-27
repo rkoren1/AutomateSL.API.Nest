@@ -9,6 +9,7 @@ import {
   Res,
 } from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { Package } from '../package/entities/package.entity';
 import { SharedBot } from '../shared-bot/entities/shared-bot.entity';
 import { BotService } from './bot.service';
 import { CreateBotResponseDto } from './dto/create-bot-response.dto';
@@ -16,6 +17,9 @@ import { CreateBotDto } from './dto/create-bot.dto';
 import { GetBotConfigurationQueryDto } from './dto/get-bot-configuration-query.dto';
 import { GetBotConfigurationResponseDto } from './dto/get-bot-configuration-response.dto';
 import { GetBotDto } from './dto/get-bot.dto';
+import { GetDiscordSettingsQueryDto } from './dto/get-discord-settings-query.dto';
+import { GetDiscordSettingsResponseDto } from './dto/get-discord-settings-response.dto';
+import { GetPackagesResponseDto } from './dto/get-packages-response.dto';
 import { GetSharedBotsResponseDto } from './dto/get-shared-bots-response.dto';
 import { StartBotQueryDto } from './dto/start-bot-query.dto';
 
@@ -179,5 +183,43 @@ export class BotController {
         return res.json(response);
       })
       .catch((err) => res.sendStatus(500));
+  }
+  @Get('getpackages')
+  @ApiOkResponse({
+    type: GetPackagesResponseDto,
+  })
+  getPackages(@Res() res) {
+    return this.botService
+      .getPackages()
+      .then((result: Package[]) => {
+        const response = new Array<GetPackagesResponseDto>();
+        result.forEach((ele) => {
+          response.push({
+            id: ele.id,
+            packageName: ele.packageName,
+            packageDescription: ele.packageDescription,
+            pricePerWeek: ele.pricePerWeek,
+            discount: ele.discount,
+            pricePerMonth: ele.pricePerMonth,
+            couponId: ele.couponId,
+          });
+        });
+        return res.json(response);
+      })
+      .catch((err) => res.sendStatus(500));
+  }
+  @Get('getdiscordsettings')
+  @ApiOkResponse({
+    type: GetDiscordSettingsResponseDto,
+  })
+  getDiscordSettings(@Query() query: GetDiscordSettingsQueryDto, @Res() res) {
+    return this.botService
+      .getDiscordSettings(query.botId)
+      .then((result: GetDiscordSettingsResponseDto) => {
+        return res.json(result);
+      })
+      .catch((err) => {
+        return res.status(500);
+      });
   }
 }

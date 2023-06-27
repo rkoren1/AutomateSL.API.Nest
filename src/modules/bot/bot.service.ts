@@ -327,4 +327,31 @@ export class BotService {
         .catch((err) => reject(err));
     });
   }
+  getPackages() {
+    return new Promise((resolve, reject) => {
+      return Package.findAll({
+        attributes: [
+          'id',
+          'packageName',
+          'packageDescription',
+          'pricePerWeek',
+          'discount',
+          'pricePerMonth',
+          'couponId',
+        ],
+      })
+        .then((result) => resolve(result))
+        .catch((err) => reject(err));
+    });
+  }
+  getDiscordSettings(botId: number) {
+    return new Promise((resolve, reject) => {
+      return DiscordSettings.findAll({
+        attributes: ['id', 'webHookUrl', 'slGroupUuid', 'discChannelId'],
+        where: { botId: botId },
+      })
+        .then((result) => resolve(result))
+        .catch((err) => reject(err));
+    });
+  }
 }

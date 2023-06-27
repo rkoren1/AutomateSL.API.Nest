@@ -17,7 +17,7 @@ export class Package extends Model<Package> {
   @Column({
     type: DataType.STRING,
   })
-  pacakageDescription: string;
+  packageDescription: string;
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
