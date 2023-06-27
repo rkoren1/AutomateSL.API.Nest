@@ -81,7 +81,6 @@ export class BotDb extends Model<BotDb> {
   imageId: string;
   @Column({
     type: DataType.INTEGER,
-    allowNull: false,
   })
   actionId: number;
 

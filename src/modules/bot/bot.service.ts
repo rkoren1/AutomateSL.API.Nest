@@ -8,7 +8,7 @@ import { forkJoin } from 'rxjs';
 import { Op } from 'sequelize';
 import { BasicDiscBot } from 'src/core/classes/basic-disc-bot';
 import { SmartBot } from 'src/core/classes/smart-bot';
-import urlMetadata from 'url-metadata';
+import * as urlMetadata from 'url-metadata';
 import { DiscordSettings } from '../discord-settings/entities/discord-setting.entity';
 import { Package } from '../package/entities/package.entity';
 import { SharedBotUserSubscription } from '../shared-bot-user-subscription/entities/shared-bot-user-subscription.entity';
@@ -62,6 +62,7 @@ export class BotService {
               running: false,
               shouldRun: false,
               loginSpawnLocation: createBotDto.loginSpawnLocation,
+              loginRegion: createBotDto.loginRegion,
               uuid: uuid,
               imageId: metadata.imageid,
             })

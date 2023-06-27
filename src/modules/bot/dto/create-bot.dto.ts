@@ -4,4 +4,5 @@ export class CreateBotDto {
   loginPassword: string;
   userId: number;
   loginSpawnLocation: string;
+  loginRegion?: string;
 }

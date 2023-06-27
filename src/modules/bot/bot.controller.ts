@@ -12,6 +12,7 @@ import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Package } from '../package/entities/package.entity';
 import { SharedBot } from '../shared-bot/entities/shared-bot.entity';
 import { BotService } from './bot.service';
+import { CreateBotBodyDto } from './dto/create-bot-body.dto';
 import { CreateBotResponseDto } from './dto/create-bot-response.dto';
 import { CreateBotDto } from './dto/create-bot.dto';
 import { GetBotConfigurationQueryDto } from './dto/get-bot-configuration-query.dto';
@@ -34,8 +35,8 @@ export class BotController {
   @ApiOkResponse({
     type: CreateBotResponseDto,
   })
-  create(@Body() createBotDto: CreateBotDto, @Req() req, @Res() res) {
-    let firstName = req.body.slUserName;
+  create(@Body() body: CreateBotBodyDto, @Req() req, @Res() res) {
+    let firstName = body.slUserName;
     let lastName = 'Resident';
     if (firstName.includes('.')) {
       const splittedWords = firstName.split('.');
@@ -47,14 +48,15 @@ export class BotController {
       lastName = splittedWords[1];
       firstName = splittedWords[0];
     }
-    const data = {
-      userId: req['id'],
+    const data: CreateBotDto = {
+      userId: req.id,
       loginFirstName: firstName,
       loginLastName: lastName,
-      loginPassword: req.body.loginPassword,
-      loginSpawnLocation: req.body.loginSpawnLocation,
-      loginRegion: req.body.loginRegion,
+      loginPassword: body.loginPassword,
+      loginSpawnLocation: body.loginSpawnLocation,
+      loginRegion: body.loginRegion,
     };
+    console.log(data);
     return this.botService
       .create(data)
       .then((result) => {
@@ -89,11 +91,11 @@ export class BotController {
     @Req() req,
     @Res() res,
     @Query()
-    queryParams: GetBotConfigurationQueryDto,
+    query: GetBotConfigurationQueryDto,
   ) {
     const data = {
-      botFirstName: queryParams.firstName,
-      botLastName: queryParams.lastName,
+      botFirstName: query.firstName,
+      botLastName: query.lastName,
       userId: req.id,
     };
     this.botService
@@ -129,7 +131,7 @@ export class BotController {
   })
   startBot(@Query() query: StartBotQueryDto, @Req() req, @Res() res) {
     const data = {
-      botId: req.query.botId,
+      botId: query.botId,
       userId: req['id'],
     };
     return this.botService
@@ -152,7 +154,7 @@ export class BotController {
   })
   stopBot(@Query() query: StartBotQueryDto, @Req() req, @Res() res) {
     const data = {
-      botId: req.query.botId,
+      botId: query.botId,
       userId: req['id'],
     };
     return this.botService
