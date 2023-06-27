@@ -271,11 +271,7 @@ export class BotController {
   @ApiOkResponse({
     type: CreateBotResponseDto,
   })
-  refreshBotStatus(
-    @Res() res,
-    @Query()
-    query: RefreshBotStatusQueryDto,
-  ) {
+  refreshBotStatus(@Res() res, @Query() query: RefreshBotStatusQueryDto) {
     this.botService.refreshBotStatus(query.botId).then((isSuccessful) => {
       return res.json({ success: true, message: 'Refresh Successful' });
     });
