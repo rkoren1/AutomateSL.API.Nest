@@ -17,6 +17,8 @@ import { Subscription } from '../subscription/entities/subscription.entity';
 import { User } from '../user/entities/user.entity';
 import { CreateBotDto } from './dto/create-bot.dto';
 import { GetBotDto } from './dto/get-bot.dto';
+import { SetBotConfigurationBodyDto } from './dto/set-bot-configuration-body.dto';
+import { SetDiscordSettingsBodyDto } from './dto/set-discord-settings-body.dto';
 import { BotDb } from './entities/bot.entity';
 @Injectable()
 export class BotService {
@@ -350,6 +352,32 @@ export class BotService {
         attributes: ['id', 'webHookUrl', 'slGroupUuid', 'discChannelId'],
         where: { botId: botId },
       })
+        .then((result) => resolve(result))
+        .catch((err) => reject(err));
+    });
+  }
+  setDiscordSettings(data: SetDiscordSettingsBodyDto) {
+    return new Promise((resolve, reject) => {
+      return DiscordSettings.upsert({
+        id: data.id,
+        botId: data.botId,
+        discChannelId: data.discChannelId,
+        webHookUrl: data.webHookUrl,
+        slGroupUuid: data.slGroupUuid,
+      })
+        .then((result) => resolve(result))
+        .catch((err) => reject(err));
+    });
+  }
+  setBotConfiguration(data: SetBotConfigurationBodyDto) {
+    return new Promise((resolve, reject) => {
+      return BotDb.update(
+        {
+          loginRegion: data.loginRegion,
+          loginSpawnLocation: data.loginSpawnLocation,
+        },
+        { where: { id: data.botId } },
+      )
         .then((result) => resolve(result))
         .catch((err) => reject(err));
     });

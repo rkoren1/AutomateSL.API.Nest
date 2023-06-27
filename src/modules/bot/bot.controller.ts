@@ -21,6 +21,8 @@ import { GetDiscordSettingsQueryDto } from './dto/get-discord-settings-query.dto
 import { GetDiscordSettingsResponseDto } from './dto/get-discord-settings-response.dto';
 import { GetPackagesResponseDto } from './dto/get-packages-response.dto';
 import { GetSharedBotsResponseDto } from './dto/get-shared-bots-response.dto';
+import { SetBotConfigurationBodyDto } from './dto/set-bot-configuration-body.dto';
+import { SetDiscordSettingsBodyDto } from './dto/set-discord-settings-body.dto';
 import { StartBotQueryDto } from './dto/start-bot-query.dto';
 
 @ApiTags('Bot')
@@ -220,6 +222,46 @@ export class BotController {
       })
       .catch((err) => {
         return res.status(500);
+      });
+  }
+  @Post('setdiscordsettings')
+  @ApiOkResponse({
+    type: CreateBotResponseDto,
+  })
+  setDiscordSettings(@Body() body: SetDiscordSettingsBodyDto, @Res() res) {
+    return this.botService
+      .setDiscordSettings(body)
+      .then((result) => {
+        return res.json({
+          success: true,
+          message: 'Discord settings added successfuly',
+        });
+      })
+      .catch((err) => {
+        return res.json({
+          success: false,
+          message: 'Failed to add discord settings',
+        });
+      });
+  }
+  @Post('setbotconfiguration')
+  @ApiOkResponse({
+    type: CreateBotResponseDto,
+  })
+  setBotConfiguration(@Body() body: SetBotConfigurationBodyDto, @Res() res) {
+    return this.botService
+      .setBotConfiguration(body)
+      .then((result) => {
+        return res.json({
+          success: true,
+          message: 'Bot configuration updated successfuly',
+        });
+      })
+      .catch((err) => {
+        return res.json({
+          success: false,
+          message: 'Failed to update bot configuration',
+        });
       });
   }
 }
