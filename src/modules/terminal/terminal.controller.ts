@@ -23,7 +23,7 @@ import { AddBalanceBodyDto } from './dto/add-balance-body.dto';
 @Controller('terminal')
 export class TerminalController {
   constructor(private readonly terminalService: TerminalService) {}
-  @Get('getallbots')
+  @Get('getbots')
   @ApiOkResponse({ type: [GetAllBotsResponseDto] })
   getAllBots(@Query() query: GetAllBotsQueryDto, @Res() res) {
     return this.terminalService
