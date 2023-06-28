@@ -9,7 +9,7 @@ import { BotLog } from 'src/modules/bot-log/entities/bot-log.entity';
 import { BotDb } from 'src/modules/bot/entities/bot.entity';
 import { DiscordSettings } from 'src/modules/discord-settings/entities/discord-setting.entity';
 import { User } from 'src/modules/user/entities/user.entity';
-import urlMetadata from 'url-metadata';
+import * as urlMetadata from 'url-metadata';
 import { discClient } from '../services/discord-bot.service';
 import { isUuidValid } from '../services/helper.service';
 
