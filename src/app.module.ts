@@ -16,6 +16,7 @@ import { SharedBotModule } from './modules/shared-bot/shared-bot.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { TerminalModule } from './modules/terminal/terminal.module';
 import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { UserModule } from './modules/user/user.module';
     PackageModule,
     DiscordSettingsModule,
     BotLogModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, InitService],
@@ -42,7 +44,7 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(JwtMiddleware)
-      .exclude('user/(.*)', 'terminal/(.*)')
+      .exclude('user/(.*)', 'terminal/(.*)', 'uptime', 'refreshtoken')
       .forRoutes('*');
   }
 }
