@@ -269,7 +269,7 @@ export class TerminalController {
     return this.terminalService.getBalance(query.userUuid).then((res) => {
       return {
         result: Result.OK,
-        resulttext: 'get balance success',
+        resulttext: 'get_balance_success',
         custom: { balance: res.l$Balance },
       };
     });
