@@ -1,11 +1,24 @@
-import { NestFactory } from '@nestjs/core';
+import { NestApplication, NestFactory } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
+import * as express from 'express';
+import * as fs from 'fs';
+import * as spdy from 'spdy';
 import { AppModule } from './app.module';
 import { discClient } from './core/services/discord-bot.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const expressApp = express();
+  const httpsOptions = {
+    key: fs.readFileSync('src/private-key.pem'),
+    cert: fs.readFileSync('src/public-certificate.pem'),
+  };
+  const server = spdy.createServer(httpsOptions, expressApp);
+  const app: NestApplication = await NestFactory.create(
+    AppModule,
+    new ExpressAdapter(expressApp),
+  );
   app.use(cookieParser());
   app.setGlobalPrefix('/api');
   app.enableCors({
@@ -25,7 +38,8 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/swagger', app, document);
-  await app.listen(3000);
+  await app.init();
+  await server.listen(3000);
   discClient.login(process.env.DISC_BOT_TOKEN);
 }
 bootstrap();
