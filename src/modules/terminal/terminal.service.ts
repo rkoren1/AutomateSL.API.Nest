@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { ExtensionPeriodUnit } from 'src/core/constants/constants';
+import { ExtensionPeriodUnit, Result } from 'src/core/constants/constants';
 import { addDaysToDate } from 'src/core/services/helper.service';
 import { BotDb } from '../bot/entities/bot.entity';
 import { PaymentLog } from '../payment/entities/payment-log.entity';
@@ -155,6 +155,19 @@ export class TerminalService {
     return User.findOne({
       attributes: ['l$Balance'],
       where: { uuid: uuid },
+    }).then((user) => {
+      if (user)
+        return {
+          result: Result.OK,
+          resulttext: 'get_balance_success',
+          custom: { balance: user.l$Balance },
+        };
+      else
+        return {
+          result: Result.FAIL,
+          resulttext: 'get_balance_fail',
+          custom: { balance: -1 },
+        };
     });
   }
 }

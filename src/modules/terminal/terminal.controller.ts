@@ -266,12 +266,6 @@ export class TerminalController {
   @Get('getbalance')
   @ApiOkResponse({ type: SharedActionsResponseDto })
   getBalance(@Query() query: GetBalanceQueryDto) {
-    return this.terminalService.getBalance(query.userUuid).then((res) => {
-      return {
-        result: Result.OK,
-        resulttext: 'get_balance_success',
-        custom: { balance: res.l$Balance },
-      };
-    });
+    return this.terminalService.getBalance(query.userUuid);
   }
 }
