@@ -1,11 +1,10 @@
 import { Body, Controller, Get, Post, Put, Query, Res } from '@nestjs/common';
-import { ApiOkResponse, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Result } from 'src/core/constants/constants';
-import { BotDb } from '../bot/entities/bot.entity';
 import { User } from '../user/entities/user.entity';
+import { AddBalanceBodyDto } from './dto/add-balance-body.dto';
 import { AddTerminalBodyDto } from './dto/add-terminal-body.dto';
-import { GetAllBotsQueryDto } from './dto/get-all-bots-query.dto';
-import { GetAllBotsResponseDto } from './dto/get-all-bots-response.dto';
+import { GetBalanceQueryDto } from './dto/get-balance-query.dto';
 import { isRegisteredQueryDto } from './dto/is-registered-query.dto';
 import { PaySubscriptionDto } from './dto/pay-subscription.dto';
 import { RegisterBodyDto } from './dto/register-body.dto';
@@ -16,7 +15,6 @@ import { UpdateTerminalActivityQueryDto } from './dto/update-terminal-activity-q
 import { UpdateTerminalOwnerBodyDto } from './dto/update-terminal-owner-body.dto';
 import { TerminalOwner } from './entities/terminal-owner.entity';
 import { TerminalService } from './terminal.service';
-import { AddBalanceBodyDto } from './dto/add-balance-body.dto';
 
 @ApiTags('Terminal')
 @ApiSecurity('apiKey')
@@ -264,5 +262,16 @@ export class TerminalController {
           custom: { UUID: body.UUID },
         }),
       );
+  }
+  @Get('getbalance')
+  @ApiOkResponse({ type: SharedActionsResponseDto })
+  getBalance(@Query() query: GetBalanceQueryDto) {
+    return this.terminalService.getBalance(query.userUuid).then((res) => {
+      return {
+        result: Result.OK,
+        resulttext: 'get balance success',
+        custom: { balance: res.l$Balance },
+      };
+    });
   }
 }

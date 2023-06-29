@@ -3,13 +3,13 @@ import * as bcrypt from 'bcrypt';
 import { ExtensionPeriodUnit } from 'src/core/constants/constants';
 import { addDaysToDate } from 'src/core/services/helper.service';
 import { BotDb } from '../bot/entities/bot.entity';
+import { PaymentLog } from '../payment/entities/payment-log.entity';
 import { Subscription } from '../subscription/entities/subscription.entity';
 import { User } from '../user/entities/user.entity';
+import { AddBalanceBodyDto } from './dto/add-balance-body.dto';
 import { PaySubscriptionDto } from './dto/pay-subscription.dto';
 import { UpdateTerminalOwnerBodyDto } from './dto/update-terminal-owner-body.dto';
 import { TerminalOwner } from './entities/terminal-owner.entity';
-import { AddBalanceBodyDto } from './dto/add-balance-body.dto';
-import { PaymentLog } from '../payment/entities/payment-log.entity';
 
 @Injectable()
 export class TerminalService {
@@ -151,4 +151,10 @@ export class TerminalService {
       });
     });
   };
+  getBalance(uuid: string) {
+    return User.findOne({
+      attributes: ['l$Balance'],
+      where: { uuid: uuid },
+    });
+  }
 }
