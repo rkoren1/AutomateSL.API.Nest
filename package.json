@@ -21,9 +21,11 @@
   },
   "dependencies": {
     "@caspertech/node-metaverse": "^0.5.53",
+    "@fastify/static": "^6.10.2",
     "@nestjs/common": "^10.0.3",
     "@nestjs/core": "^10.0.3",
     "@nestjs/platform-express": "^10.0.3",
+    "@nestjs/platform-fastify": "^10.0.3",
     "@nestjs/sequelize": "^10.0.0",
     "@nestjs/serve-static": "^4.0.0",
     "@nestjs/swagger": "^7.0.11",
