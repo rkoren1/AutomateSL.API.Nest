@@ -3,6 +3,7 @@ import {
   BotOptionFlags,
   InstantMessageEvent,
   LoginParameters,
+  Vector3,
 } from '@caspertech/node-metaverse';
 import fetch from 'node-fetch';
 import { BotLog } from 'src/modules/bot-log/entities/bot-log.entity';
@@ -198,6 +199,18 @@ export class BasicDiscBot extends Bot {
           }
           case 'say': {
             this.clientCommands.comms.say(commandParams[0]);
+            break;
+          }
+          case 'teleport': {
+            this.clientCommands.teleport.teleportTo(
+              commandParams[0],
+              new Vector3([
+                +commandParams[1],
+                +commandParams[2],
+                +commandParams[3],
+              ]),
+              Vector3.getZero(),
+            );
             break;
           }
           case 'shout': {
