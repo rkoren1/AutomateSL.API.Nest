@@ -189,7 +189,7 @@ export class BotService {
         });
     });
   }
-  startBot(data) {
+  startBot(botId: number, userId: number) {
     return new Promise((resolve, reject) => {
       return BotDb.findOne({
         attributes: [
@@ -201,7 +201,7 @@ export class BotService {
           'loginRegion',
           'uuid',
         ],
-        where: { id: data.botId, userId: data.userId },
+        where: { id: botId, userId: userId },
       })
         .then((bot) => {
           if (
@@ -224,10 +224,10 @@ export class BotService {
           //get User uuid
           User.findOne({
             attributes: ['uuid', 'avatarName'],
-            where: { id: data.userId },
+            where: { id: userId },
           })
             .then((user) => {
-              DiscordSettings.findAll({ where: { botId: data.botId } }).then(
+              DiscordSettings.findAll({ where: { botId: botId } }).then(
                 (discordSettings) => {
                   if (discordSettings.length > 0) {
                     //start bot
@@ -242,10 +242,10 @@ export class BotService {
                       .login()
                       .then(() => workerBot.connectToSim())
                       .then(() => {
-                        this.botInstances[data.botId] = workerBot;
+                        this.botInstances[botId] = workerBot;
                         return BotDb.update(
                           { running: true },
-                          { where: { id: data.botId, userId: data.userId } },
+                          { where: { id: botId, userId: userId } },
                         )
                           .then((result) => resolve(result))
                           .catch((err) => reject(err));
@@ -266,10 +266,10 @@ export class BotService {
                       .login()
                       .then(() => workerBot.connectToSim())
                       .then(() => {
-                        this.botInstances[data.botId] = workerBot;
+                        this.botInstances[botId] = workerBot;
                         return BotDb.update(
                           { running: true },
-                          { where: { id: data.botId, userId: data.userId } },
+                          { where: { id: botId, userId: userId } },
                         )
                           .then((result) => resolve(result))
                           .catch((err) => {

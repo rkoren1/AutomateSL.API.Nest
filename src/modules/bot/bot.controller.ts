@@ -22,10 +22,10 @@ import { GetDiscordSettingsQueryDto } from './dto/get-discord-settings-query.dto
 import { GetDiscordSettingsResponseDto } from './dto/get-discord-settings-response.dto';
 import { GetPackagesResponseDto } from './dto/get-packages-response.dto';
 import { GetSharedBotsResponseDto } from './dto/get-shared-bots-response.dto';
+import { RefreshBotStatusQueryDto } from './dto/refresh-bot-status-query.dto';
 import { SetBotConfigurationBodyDto } from './dto/set-bot-configuration-body.dto';
 import { SetDiscordSettingsBodyDto } from './dto/set-discord-settings-body.dto';
 import { StartBotQueryDto } from './dto/start-bot-query.dto';
-import { RefreshBotStatusQueryDto } from './dto/refresh-bot-status-query.dto';
 
 @ApiTags('Bot')
 @Controller('bot')
@@ -131,12 +131,8 @@ export class BotController {
     type: CreateBotResponseDto,
   })
   startBot(@Query() query: StartBotQueryDto, @Req() req, @Res() res) {
-    const data = {
-      botId: query.botId,
-      userId: req['id'],
-    };
     return this.botService
-      .startBot(data)
+      .startBot(query.botId, req.id)
       .then((result: { changedRows: number } | any) => {
         if (result.changedRows === 0)
           return res.status(400).json({
