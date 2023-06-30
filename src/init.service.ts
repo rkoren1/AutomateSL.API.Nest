@@ -36,7 +36,7 @@ export class InitService implements OnModuleInit {
           BotOptionFlags.LiteObjectStore |
           BotOptionFlags.StoreMyAttachmentsOnly;
         //start bot
-        let workerBot;
+        let workerBot: BasicDiscBot | SmartBot;
         DiscordSettings.findAll({ where: { botId: bot.id } }).then(
           (discordSettings) => {
             if (discordSettings.length > 0) {
@@ -59,6 +59,7 @@ export class InitService implements OnModuleInit {
               .login()
               .then(() => workerBot.connectToSim())
               .then(() => {
+                workerBot.isConnected = true;
                 this.botService.botInstances[bot.id] = workerBot;
               })
               .catch((err) => console.error(err));
