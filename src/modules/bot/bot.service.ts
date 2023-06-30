@@ -302,6 +302,7 @@ export class BotService {
       return this.botInstances[botId]
         .close()
         .then(() => {
+          this.botInstances[botId].isConnected = false;
           return BotDb.update(
             { running: false },
             { where: { id: botId, userId: userId } },
