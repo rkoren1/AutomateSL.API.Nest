@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Put,
   Query,
@@ -130,9 +131,9 @@ export class BotController {
   @ApiOkResponse({
     type: CreateBotResponseDto,
   })
-  startBot(@Query() query: StartBotQueryDto, @Req() req, @Res() res) {
+  startBot(@Param('botId') botId: number, @Req() req, @Res() res) {
     return this.botService
-      .startBot(query.botId, req.id)
+      .startBot(botId, req.id)
       .then((result: { changedRows: number } | any) => {
         if (result.changedRows === 0)
           return res.status(400).json({
@@ -149,9 +150,9 @@ export class BotController {
   @ApiOkResponse({
     type: CreateBotResponseDto,
   })
-  stopBot(@Query() query: StartBotQueryDto, @Req() req, @Res() res) {
+  stopBot(@Param('botId') botId: number, @Req() req, @Res() res) {
     const data = {
-      botId: query.botId,
+      botId: botId,
       userId: req['id'],
     };
     return this.botService
