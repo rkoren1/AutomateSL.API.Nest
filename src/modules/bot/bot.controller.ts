@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  Param,
   Post,
   Put,
   Query,
@@ -27,6 +26,7 @@ import { RefreshBotStatusQueryDto } from './dto/refresh-bot-status-query.dto';
 import { SetBotConfigurationBodyDto } from './dto/set-bot-configuration-body.dto';
 import { SetDiscordSettingsBodyDto } from './dto/set-discord-settings-body.dto';
 import { StartBotQueryDto } from './dto/start-bot-query.dto';
+import { StopBotQueryDto } from './dto/stop-bot-query.dto';
 
 @ApiTags('Bot')
 @Controller('bot')
@@ -131,9 +131,9 @@ export class BotController {
   @ApiOkResponse({
     type: CreateBotResponseDto,
   })
-  startBot(@Param('botId') botId: number, @Req() req, @Res() res) {
+  startBot(@Query() query: StartBotQueryDto, @Req() req, @Res() res) {
     return this.botService
-      .startBot(botId, req.id)
+      .startBot(query.botId, req.id)
       .then((result: { changedRows: number } | any) => {
         if (result.changedRows === 0)
           return res.status(400).json({
@@ -150,9 +150,9 @@ export class BotController {
   @ApiOkResponse({
     type: CreateBotResponseDto,
   })
-  stopBot(@Param('botId') botId: number, @Req() req, @Res() res) {
+  stopBot(@Query() query: StopBotQueryDto, @Req() req, @Res() res) {
     const data = {
-      botId: botId,
+      botId: query.botId,
       userId: req.id,
     };
     return this.botService
