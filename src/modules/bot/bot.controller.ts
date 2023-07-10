@@ -153,7 +153,7 @@ export class BotController {
   stopBot(@Param('botId') botId: number, @Req() req, @Res() res) {
     const data = {
       botId: botId,
-      userId: req['id'],
+      userId: req.id,
     };
     return this.botService
       .stopBot(data.botId, data.userId)
@@ -166,7 +166,7 @@ export class BotController {
   })
   getSharedBots(@Req() req, @Res() res) {
     const data = {
-      userId: req['id'],
+      userId: req.id,
     };
     return this.botService
       .getSharedBots(data.userId)
